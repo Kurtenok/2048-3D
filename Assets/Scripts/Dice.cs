@@ -1,11 +1,12 @@
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Dice : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private int diceNum = 2;
     private Rigidbody rb;
+    [Inject] private DiceManager diceManager; // Imject here for dices, whis was spawned before the game launch
 
     void Awake()
     {
@@ -39,7 +40,9 @@ public class Dice : MonoBehaviour
 
     public void UpdateDiceView()
     {
-        DiceManager.singleton.ChangeDiceView(this.transform,diceNum);
+        if(!diceManager) return;
+
+        diceManager.ChangeDiceView(this.transform,diceNum);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -60,5 +63,10 @@ public class Dice : MonoBehaviour
 
         Destroy(collision.gameObject);
         SetDiceNum(diceNum * 2);
+    }
+
+    public void SetDiceManager(DiceManager manager)
+    {
+        diceManager = manager;
     }
 }

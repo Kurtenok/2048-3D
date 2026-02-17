@@ -1,6 +1,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
 using TMPro;
+using Zenject;
 
 public class GameMode : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class GameMode : MonoBehaviour
     private float startX; 
     private Vector2 startTouch;
     private int currentScore=0;
+
+    [Inject] private DiceManager diceManager;
 
     void Awake()
     {
@@ -46,9 +49,16 @@ public class GameMode : MonoBehaviour
 
                 controlledDice = Instantiate(dicePrefab,diceSpawnPoint.position,Quaternion.identity);
 
+                Dice dice= controlledDice.GetComponent<Dice>();
+
+                if(diceManager)
+                {   
+                    dice.SetDiceManager(diceManager);
+                }
+
                 if(Random.Range(1,101)<=chanceOf4DiceSpawn*100)
                 {
-                    controlledDice.GetComponent<Dice>().SetDiceNum(4);
+                    dice.SetDiceNum(4);
                 }
 
                 controlledDice.GetComponent<Rigidbody>().isKinematic = true;
@@ -90,5 +100,11 @@ public class GameMode : MonoBehaviour
         if(!scoreText) return;
 
         scoreText.text =$"Score: {currentScore}";
+    }
+
+    public void AddScore(int numToAdd)
+    {
+        currentScore+=numToAdd;
+        UpdateScoreText();
     }
 }

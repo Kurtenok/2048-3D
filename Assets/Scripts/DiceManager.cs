@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using UnityEngine;
+using Zenject;
 
 public class DiceManager : MonoBehaviour
 {
     [SerializeField] List<DiceView> diceViews;
+
+    
 
     [System.Serializable]
     struct DiceView
@@ -13,25 +16,25 @@ public class DiceManager : MonoBehaviour
         public Texture texture;
     }
 
-    public static DiceManager singleton { get; private set;}
 
+
+    [Inject] private GameMode gameMode;
     void Awake()
     {
-        if(singleton!=null)
-        {
-            Destroy(singleton.gameObject);
-        }
-        singleton=this;
+
     }
     void Start()
     {
-        
+  
     }
 
     void Update()
     {
         
     }
+
+
+
 
     private bool TryGetDiceTextureByNum(int num,out Texture texture)
     {
@@ -67,6 +70,11 @@ public class DiceManager : MonoBehaviour
         if(!TryGetDiceTextureByNum(numToSet,out textureToSet)) return;
         
         rend.material.SetTexture("_MainTex",textureToSet);
+
+        if(gameMode)
+        {
+            gameMode.AddScore(numToSet/4); // /4 because numToSet is the next score, so it should be divided by 2 and additional /2 cause player gets only half of points
+        }
 
     }
 }
