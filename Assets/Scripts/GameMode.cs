@@ -2,6 +2,8 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using TMPro;
 using Zenject;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameMode : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class GameMode : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float chanceOf4DiceSpawn=0.25f; // should be between 0 and 1
 
+    [Header("LevelLoad")]
+    [SerializeField] private GameObject LoadindScreen;
+
     private GameObject controlledDice;
     private float startX; 
     private Vector2 startTouch;
@@ -27,7 +32,7 @@ public class GameMode : MonoBehaviour
 
     void Awake()
     {
-        chanceOf4DiceSpawn = Mathf.Clamp(chanceOf4DiceSpawn,0,1);
+        chanceOf4DiceSpawn = Mathf.Clamp(chanceOf4DiceSpawn,0f,1f);
 
         currentScore=0;
     }
@@ -55,9 +60,11 @@ public class GameMode : MonoBehaviour
                 {   
                     dice.SetDiceManager(diceManager);
                 }
+                int rand = Random.Range(1,101);
 
-                if(Random.Range(1,101)<=chanceOf4DiceSpawn*100)
+                if(rand<=chanceOf4DiceSpawn*100)
                 {
+                    Debug.Log("4");
                     dice.SetDiceNum(4);
                 }
 
@@ -106,5 +113,34 @@ public class GameMode : MonoBehaviour
     {
         currentScore+=numToAdd;
         UpdateScoreText();
+    }
+
+    public void ReloadCurrentLevel()
+    {
+        int level = SceneManager.GetActiveScene().buildIndex;
+        LoadScene(level);
+    }
+
+    public void LoadScene(int buildIndex)
+    {
+        if (LoadindScreen)
+            LoadindScreen.gameObject.SetActive(true);
+
+        StartCoroutine(Loading(buildIndex));
+    }
+
+    IEnumerator Loading(int buildIndex)
+    {
+        AsyncOperation loadAsync = SceneManager.LoadSceneAsync(buildIndex);
+        loadAsync.allowSceneActivation = false;
+
+        while (!loadAsync.isDone)
+        {
+            if (loadAsync.progress >= 0.9f && !loadAsync.allowSceneActivation)
+            {
+                loadAsync.allowSceneActivation = true;
+            }
+            yield return null;
+        }
     }
 }
