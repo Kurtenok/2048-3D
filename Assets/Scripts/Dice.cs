@@ -16,7 +16,6 @@ public class Dice : MonoBehaviour
        SetDiceNum(2);
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -50,9 +49,16 @@ public class Dice : MonoBehaviour
 
         Rigidbody otherRb= collision.gameObject.GetComponent<Rigidbody>();
 
+        if(otherRb.linearVelocity.magnitude==rb.linearVelocity.magnitude)
+        {
+            Destroy(collision.gameObject);
+            SetDiceNum(diceNum * 2);
+            return;
+        }
+
         if(otherRb.linearVelocity.magnitude>rb.linearVelocity.magnitude) return;
 
         Destroy(collision.gameObject);
-        SetDiceNum((int)Mathf.Pow(diceNum,2));
+        SetDiceNum(diceNum * 2);
     }
 }
