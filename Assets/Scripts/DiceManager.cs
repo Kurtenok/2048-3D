@@ -7,8 +7,6 @@ public class DiceManager : MonoBehaviour
 {
     [SerializeField] List<DiceView> diceViews;
 
-    
-
     [System.Serializable]
     struct DiceView
     {
@@ -16,26 +14,7 @@ public class DiceManager : MonoBehaviour
         public Texture texture;
     }
 
-
-
     [Inject] private GameMode gameMode;
-    [Inject] private MusicManager musicManager;
-    void Awake()
-    {
-
-    }
-    void Start()
-    {
-  
-    }
-
-    void Update()
-    {
-        
-    }
-
-
-
 
     private bool TryGetDiceTextureByNum(int num,out Texture texture)
     {
@@ -58,7 +37,7 @@ public class DiceManager : MonoBehaviour
         return false;
     }
 
-    public void ChangeDiceView(Transform dice, int numToSet)
+    public void ChangeDiceView(Transform dice, int numToSet,bool DiceCollided=false)
     {
         if(!dice) return;
 
@@ -72,12 +51,11 @@ public class DiceManager : MonoBehaviour
         
         rend.material.SetTexture("_MainTex",textureToSet);
 
-        if(gameMode)
+        if(gameMode && DiceCollided)
         {
             gameMode.AddScore(numToSet/4); // /4 because numToSet is the next score, so it should be divided by 2 and additional /2 cause player gets only half of points
-            
-            if(musicManager)
-            musicManager.PlayDiceMergeSound();
+
+            MusicManager.singleton.PlayDiceMergeSound();
         }
 
     }

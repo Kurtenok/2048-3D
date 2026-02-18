@@ -5,6 +5,7 @@ using Zenject;
 public class Dice : MonoBehaviour
 {
     [SerializeField] private int diceNum = 2;
+    [SerializeField] private float minImpulseToCollide = 1;
     private Rigidbody rb;
     [Inject] private DiceManager diceManager; // Imject here for dices, whis was spawned before the game launch
 
@@ -28,7 +29,7 @@ public class Dice : MonoBehaviour
     {
         return diceNum;
     }
-    public void SetDiceNum(int num)
+    public void SetDiceNum(int num,bool DiceCollided=false)
     {
         if(num < 0 || num%2!=0)
         {
@@ -38,14 +39,16 @@ public class Dice : MonoBehaviour
 
         diceNum = num;
 
-        UpdateDiceView();
+        UpdateDiceView(DiceCollided);
+
+
     }
 
-    public void UpdateDiceView()
+    public void UpdateDiceView(bool DiceCollided=false)
     {
         if(!diceManager) return;
 
-        diceManager.ChangeDiceView(this.transform,diceNum);
+        diceManager.ChangeDiceView(this.transform,diceNum,DiceCollided);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -55,17 +58,24 @@ public class Dice : MonoBehaviour
 
         Rigidbody otherRb= collision.gameObject.GetComponent<Rigidbody>();
 
-        if(otherRb.linearVelocity.magnitude==rb.linearVelocity.magnitude)
+        if(collision.impulse.magnitude<minImpulseToCollide)
+        return;
+
+        float thisDiceImpulse=rb.linearVelocity.magnitude;
+        float otherDiceImpulse=otherRb.linearVelocity.magnitude;
+
+        if(otherDiceImpulse==thisDiceImpulse)
         {
             Destroy(collision.gameObject);
-            SetDiceNum(diceNum * 2);
+            SetDiceNum(diceNum * 2,true);
             return;
         }
 
-        if(otherRb.linearVelocity.magnitude>rb.linearVelocity.magnitude) return;
+        if(otherDiceImpulse>thisDiceImpulse) return;
 
         Destroy(collision.gameObject);
-        SetDiceNum(diceNum * 2);
+        SetDiceNum(diceNum * 2,true);
+
     }
 
     public void SetDiceManager(DiceManager manager)

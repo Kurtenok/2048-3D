@@ -123,6 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceNum: 2
+  minImpulseToCollide: 0.7
 --- !u!54 &8769598919210573632
 Rigidbody:
   m_ObjectHideFlags: 0

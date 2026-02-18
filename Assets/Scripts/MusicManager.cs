@@ -9,7 +9,7 @@ public class MusicManager : MonoBehaviour
     [SerializeField] AudioClip DiceLaunchSound;
     [SerializeField] AudioClip DiceMergeSound;
     AudioSource MusicSource;
-    AudioSource PlayerSource;
+    [SerializeField] AudioSource PlayerSource;
     public static MusicManager singleton;
 
     void Awake()
@@ -45,7 +45,7 @@ public class MusicManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        SetPlayerAudioSrc();
+       SetPlayerAudioSrc();
     }
 
     public void PlayWinSound()
@@ -61,6 +61,7 @@ public class MusicManager : MonoBehaviour
         if (!DiceLaunchSound || !PlayerSource)
             return;
 
+       
         PlayerSource.clip = DiceLaunchSound;
         PlayerSource.Play();
     }

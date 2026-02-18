@@ -23,28 +23,46 @@ public class GameMode : MonoBehaviour
     [Header("LevelLoad")]
     [SerializeField] private GameObject LoadindScreen;
 
+    [Header("WinCondition")]
+    [SerializeField] private int scoreToWin=100;
+    [SerializeField] private TextMeshProUGUI ScoreToWinText;
+    [SerializeField] private Transform winScreen;
+    [SerializeField] private TextMeshProUGUI winScreenScoreText;
+
     private GameObject controlledDice;
     private float startX; 
     private Vector2 startTouch;
     private int currentScore=0;
+    private bool isContolLocked=false;
 
     [Inject] private DiceManager diceManager;
-    [Inject] private MusicManager musicManager;
 
     void Awake()
     {
         chanceOf4DiceSpawn = Mathf.Clamp(chanceOf4DiceSpawn,0f,1f);
 
         currentScore=0;
+
+        isContolLocked=false;
     }
     void Start()
     {
         UpdateScoreText();
+
+        if(winScreen)
+        {
+            winScreen.gameObject.SetActive(false);
+        }
+        if(ScoreToWinText)
+        {
+            ScoreToWinText.text=$"To win: {scoreToWin}";
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
+
+        if(isContolLocked) return;
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -99,10 +117,8 @@ public class GameMode : MonoBehaviour
                 rb.isKinematic = false;
                 rb.AddRelativeForce(transform.forward * DicePushForce);
 
-                if(musicManager)
-                {
-                    musicManager.PlayDiceLaunchSound();
-                }
+
+                MusicManager.singleton.PlayDiceLaunchSound();
             }
         }
     }
@@ -118,6 +134,11 @@ public class GameMode : MonoBehaviour
     {
         currentScore+=numToAdd;
         UpdateScoreText();
+
+        if(currentScore>=scoreToWin)
+        {
+            EndGamebyWin();
+        }
     }
 
     public void ReloadCurrentLevel()
@@ -147,6 +168,26 @@ public class GameMode : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    private void EndGamebyWin()
+    {
+        isContolLocked=true;
+        MusicManager.singleton.PlayWinSound();
+
+        if(!winScreen)
+        {
+            Debug.LogError($"Set win screnn on {gameObject.name} to win");
+            return;
+        }
+
+        if(winScreenScoreText)
+        {
+            winScreenScoreText.text=$"Score: {currentScore}";
+        }
+
+        winScreen.gameObject.SetActive(true);
+
     }
 
 }
