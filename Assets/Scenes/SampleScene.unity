@@ -3267,6 +3267,7 @@ GameObject:
   - component: {fileID: 3469287836957053651}
   - component: {fileID: 1711813856184526361}
   - component: {fileID: 346105964}
+  - component: {fileID: 3469287836957053652}
   m_Layer: 0
   m_Name: GameTable
   m_TagString: Untagged
@@ -3329,6 +3330,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148648626124}
   m_Mesh: {fileID: -7754318969949236687, guid: 795e4019c081fa843820f512b94bbc26, type: 3}
+--- !u!65 &3469287836957053652
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148648626124}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.01561039, y: 0.015228565, z: 0.318325}
+  m_Center: {x: 0.15139908, y: 0.28838238, z: 0.00090898445}
 --- !u!1001 &7924391775845114819
 PrefabInstance:
   m_ObjectHideFlags: 0
