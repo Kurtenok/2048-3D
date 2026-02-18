@@ -29,6 +29,7 @@ public class GameMode : MonoBehaviour
     private int currentScore=0;
 
     [Inject] private DiceManager diceManager;
+    [Inject] private MusicManager musicManager;
 
     void Awake()
     {
@@ -64,7 +65,6 @@ public class GameMode : MonoBehaviour
 
                 if(rand<=chanceOf4DiceSpawn*100)
                 {
-                    Debug.Log("4");
                     dice.SetDiceNum(4);
                 }
 
@@ -98,6 +98,11 @@ public class GameMode : MonoBehaviour
                 Rigidbody rb = controlledDice.GetComponent<Rigidbody>();
                 rb.isKinematic = false;
                 rb.AddRelativeForce(transform.forward * DicePushForce);
+
+                if(musicManager)
+                {
+                    musicManager.PlayDiceLaunchSound();
+                }
             }
         }
     }
@@ -143,4 +148,5 @@ public class GameMode : MonoBehaviour
             yield return null;
         }
     }
+
 }

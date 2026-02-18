@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,16 +13,17 @@ public class MusicManager : MonoBehaviour
     public static MusicManager singleton;
 
     void Awake()
-{
-    if (singleton != null && singleton != this)
     {
-        Destroy(gameObject);
-        return;
+        if (singleton != null && singleton != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        singleton = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    singleton = this;
-    DontDestroyOnLoad(gameObject);
-}
 
     void Start()
     {
@@ -36,14 +38,14 @@ public class MusicManager : MonoBehaviour
             MusicSource.Play();
         }
         singleton = this;
+
+        SetPlayerAudioSrc();
     }
 
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        var Player = GameObject.FindGameObjectWithTag("Player");
-        if(Player)
-        PlayerSource = Player.GetComponent<AudioSource>();
+        SetPlayerAudioSrc();
     }
 
     public void PlayWinSound()
@@ -69,5 +71,14 @@ public class MusicManager : MonoBehaviour
 
         PlayerSource.clip = DiceMergeSound;
         PlayerSource.Play();
+    }
+
+    private void SetPlayerAudioSrc()
+    {
+        GameObject Player = GameObject.FindGameObjectWithTag("Player");
+        if(Player)
+        {
+            PlayerSource = Player.GetComponent<AudioSource>();
+        }
     }
 }

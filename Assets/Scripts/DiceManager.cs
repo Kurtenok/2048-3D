@@ -19,6 +19,7 @@ public class DiceManager : MonoBehaviour
 
 
     [Inject] private GameMode gameMode;
+    [Inject] private MusicManager musicManager;
     void Awake()
     {
 
@@ -74,6 +75,9 @@ public class DiceManager : MonoBehaviour
         if(gameMode)
         {
             gameMode.AddScore(numToSet/4); // /4 because numToSet is the next score, so it should be divided by 2 and additional /2 cause player gets only half of points
+            
+            if(musicManager)
+            musicManager.PlayDiceMergeSound();
         }
 
     }

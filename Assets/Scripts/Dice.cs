@@ -14,7 +14,10 @@ public class Dice : MonoBehaviour
     }
     void Start()
     {
-       SetDiceNum(2);
+        if(diceNum%2!=0 || diceNum<2)
+        {
+            SetDiceNum(2);
+        }
     }
 
     void Update()
@@ -27,7 +30,7 @@ public class Dice : MonoBehaviour
     }
     public void SetDiceNum(int num)
     {
-        if(num < 0 || !Mathf.IsPowerOfTwo(num))
+        if(num < 0 || num%2!=0)
         {
             Debug.LogError("Wrong number to set on dice "+ this.gameObject.name);
             return;
